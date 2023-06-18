@@ -2,12 +2,12 @@ import 'reflect-metadata';
 import express from 'express';
 import config from '../config';
 import logger from '../utils/logger';
-import routes from '../interfaces/routes';
 import errorHandler from '../interfaces/middleware/error-handler';
+import databaseConnection from '../infra/database/database-connection';
 
 const app = express();
 
-app.use('/api', routes);
+databaseConnection();
 
 app.use(errorHandler);
 
