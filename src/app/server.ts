@@ -4,7 +4,7 @@ import config from '../config';
 import logger from '../utils/logger';
 import errorHandler from '../interfaces/middleware/error-handler';
 import databaseConnection from '../infra/database/database-connection';
-import routes from '../interfaces/routes/users.route';
+import routes from '../interfaces/routes';
 
 const app = express();
 
