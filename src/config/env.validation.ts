@@ -1,9 +1,30 @@
 import { plainToInstance } from 'class-transformer';
-import { IsNumber, validateSync } from 'class-validator';
+import { IsNumber, IsString, validateSync } from 'class-validator';
 
 class EnvironmentVariables {
   @IsNumber()
   port: number;
+
+  @IsString()
+  pgHost: string;
+
+  @IsNumber()
+  pgPort: number;
+
+  @IsString()
+  pgUser: string;
+
+  @IsString()
+  pgPassword: string;
+
+  @IsString()
+  pgDatabase: string;
+
+  @IsString()
+  jwtSecret: string;
+
+  @IsString()
+  jwtExpirationTime: string;
 }
 
 export function validate(config: Record<string, unknown>) {

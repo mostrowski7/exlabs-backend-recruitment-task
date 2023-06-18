@@ -1,9 +1,12 @@
 import { Service } from 'typedi';
+import { DatabaseError } from 'pg';
+import { plainToInstance } from 'class-transformer';
 import DatabaseService from '../../infra/database/database.service';
 import CreateUserDto from '../../interfaces/dtos/create-user.dto';
-import { DatabaseError } from 'pg';
 import DatabaseErrorCode from '../../infra/database/database.error';
 import HttpException from '../../utils/http-exception';
+import User from './entities/user.entity';
+import { convertQueryResultKeys } from '../../utils/case-conversion';
 
 @Service()
 class UserRepository {
@@ -31,6 +34,21 @@ class UserRepository {
 
       throw error;
     }
+  }
+
+  async getOneByEmail(email: string): Promise<User | null> {
+    const result = await this.databaseService.runQuery(
+      `
+        SELECT id, first_name, last_name, email, role
+        FROM users
+        WHERE email = $1
+        `,
+      [email],
+    );
+
+    if (result.rowCount === 0) return null;
+
+    return plainToInstance(User, convertQueryResultKeys(result.rows[0]));
   }
 }
 

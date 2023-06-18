@@ -5,6 +5,6 @@ import CreateUserDto from '../dtos/create-user.dto';
 
 const router = Router();
 
-router.post('/users', validateBody(CreateUserDto), createUser);
+router.post('/', validateBody(CreateUserDto), createUser);
 
 export default router;
