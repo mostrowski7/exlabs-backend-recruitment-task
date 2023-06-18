@@ -6,9 +6,9 @@ async function createUser(req: Request, res: Response, next: NextFunction) {
   try {
     const userService = Container.get(UserService);
 
-    const user = await userService.createUser();
+    await userService.createUser(req.body);
 
-    return res.status(201).json(user);
+    return res.sendStatus(201);
   } catch (err) {
     next(err);
   }
