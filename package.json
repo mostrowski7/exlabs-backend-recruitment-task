@@ -2,11 +2,11 @@
   "name": "exlabs-backend-recruitment-task",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/server.js",
+  "main": "dist/app/server.js",
   "scripts": {
-    "dev": "ts-node src/server.ts",
+    "dev": "ts-node src/app/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/app/server.js"
   },
   "keywords": [],
   "author": "",
