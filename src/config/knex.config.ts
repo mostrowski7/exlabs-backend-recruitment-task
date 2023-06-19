@@ -13,12 +13,12 @@ const knexConfig: Knex.Config = {
     database: process.env.PGDATABASE,
   },
   migrations: {
-    extension: 'ts',
+    extension: 'js',
     directory: '../infra/database/migrations',
   },
   seeds: {
     directory: '../infra/database/seeds',
-    extension: 'ts',
+    extension: 'js',
   },
 };
 

@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "nodemon src/app/server.ts",
     "build": "tsc",
-    "start": "node dist/app/server.js",
-    "migration": "knex migrate:up --knexfile src/config/knex.config.ts",
-    "seed": "knex seed:run --knexfile src/config/knex.config.ts",
-    "test": "tsc & jest dist/tests"
+    "start": "cross-env NODE_ENV=production node dist/app/server.js",
+    "migration": "knex migrate:up --knexfile dist/config/knex.config.js",
+    "seed": "knex seed:run --knexfile dist/config/knex.config.js",
+    "test": "jest --verbose dist/tests"
   },
   "keywords": [],
   "author": "",
@@ -17,8 +17,10 @@
   "dependencies": {
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.0",
     "knex": "^2.4.2",
     "pg": "^8.11.0",
@@ -27,12 +29,14 @@
     "winston": "^3.9.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/pg": "^8.10.2",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
+    "cross-env": "^7.0.3",
     "eslint": "^8.43.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
