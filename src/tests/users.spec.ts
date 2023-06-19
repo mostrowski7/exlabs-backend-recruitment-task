@@ -6,6 +6,7 @@ import CreateUserDto from '../interfaces/dtos/create-user.dto';
 import DatabaseErrorCode from '../infra/database/database.error';
 import HttpException from '../utils/http-exception';
 import UserRepository from '../modules/users/users.repository';
+import { UpdateUserBodyDto } from '../interfaces/dtos/update-user.dto';
 
 jest.mock('../infra/database/database.service');
 
@@ -13,7 +14,7 @@ describe('UserService', () => {
   let userService: UserService;
   let userRepository: UserRepository;
   let databaseServiceMock: jest.Mocked<DatabaseService>;
-  const restQueryResult = { rows: [], oid: 0, command: 'INSERT', fields: [] };
+  const restQueryResult = { rows: [], oid: 0, command: 'SELECT', fields: [] };
   const createUserDto: CreateUserDto = { firstName: 'John', lastName: 'Smith', email: 'smith@gmail.com', role: 'user' };
   const rawUserRow = { id: 1, first_name: 'John', last_name: 'Smith', email: 'smith@gmail.com', role: 'user' };
   const userRow = { id: 1, firstName: 'John', lastName: 'Smith', email: 'smith@gmail.com', role: 'user' };
@@ -66,12 +67,12 @@ describe('UserService', () => {
     });
   });
 
-  describe('getUsers method', () => {
+  describe('getUsersByRole method', () => {
     describe('when fetch some users', () => {
       it('should return array of users', async () => {
         databaseServiceMock.runQuery.mockResolvedValueOnce({ rowCount: 1, ...restQueryResult, rows: [rawUserRow] });
 
-        const result = await userService.getUsers();
+        const result = await userService.getUsersByRole();
 
         expect(result).toEqual([userRow]);
       });
@@ -81,7 +82,7 @@ describe('UserService', () => {
       it('should return empty array', async () => {
         databaseServiceMock.runQuery.mockResolvedValueOnce({ rowCount: 0, ...restQueryResult });
 
-        const result = await userService.getUsers();
+        const result = await userService.getUsersByRole();
 
         expect(result).toEqual([]);
       });
@@ -93,11 +94,11 @@ describe('UserService', () => {
 
         databaseServiceMock.runQuery.mockResolvedValueOnce({ rowCount: 0, ...restQueryResult });
 
-        const findUserByRoleSpy = jest.spyOn(userRepository, 'getUsersByRole');
+        const getUsersByRoleSpy = jest.spyOn(userRepository, 'getUsersByRole');
 
-        await userService.getUsers(role);
+        await userService.getUsersByRole(role);
 
-        expect(findUserByRoleSpy).toHaveBeenCalledWith(role);
+        expect(getUsersByRoleSpy).toHaveBeenCalledWith(role);
       });
     });
 
@@ -107,7 +108,7 @@ describe('UserService', () => {
 
         const getAllUsersSpy = jest.spyOn(userRepository, 'getAllUsers');
 
-        await userService.getUsers();
+        await userService.getUsersByRole();
 
         expect(getAllUsersSpy).toHaveBeenCalled();
       });
@@ -140,6 +141,40 @@ describe('UserService', () => {
         databaseServiceMock.runQuery.mockResolvedValueOnce({ rowCount: 0, ...restQueryResult });
 
         await expect(userService.findUserById(1)).rejects.toThrow(new HttpException('User not found', 404));
+      });
+    });
+  });
+
+  describe('updateUserById method', () => {
+    const userId = 1;
+    const updateUserBodyDto: UpdateUserBodyDto = { firstName: 'Jack' };
+    const restUpdateQueryResult = { rows: [], oid: 0, command: 'UPDATE', fields: [] };
+
+    it('should pass correct parameter to updateUserById method', async () => {
+      databaseServiceMock.runQuery.mockResolvedValueOnce({ rowCount: 1, ...restUpdateQueryResult });
+
+      const updateUserByIdSpy = jest.spyOn(userRepository, 'updateUserById');
+
+      await userService.updateUserById(userId, updateUserBodyDto);
+
+      expect(updateUserByIdSpy).toHaveBeenCalledWith(userId, updateUserBodyDto);
+    });
+
+    describe('when successfully update user', () => {
+      it('should return resolved promise', async () => {
+        databaseServiceMock.runQuery.mockResolvedValueOnce({ rowCount: 1, ...restUpdateQueryResult });
+
+        const result = await userService.updateUserById(userId, updateUserBodyDto);
+
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe('when not found user', () => {
+      it('should throws not found exception', async () => {
+        databaseServiceMock.runQuery.mockResolvedValueOnce({ rowCount: 0, ...restUpdateQueryResult });
+
+        await expect(userService.updateUserById(userId, updateUserBodyDto)).rejects.toThrow(new HttpException('User not found', 404));
       });
     });
   });
