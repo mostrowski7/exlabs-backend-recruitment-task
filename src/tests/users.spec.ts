@@ -20,6 +20,13 @@ describe('UserService', () => {
     email: 'smith@gmail.com',
     role: 'user',
   };
+  const rawUserRow = {
+    id: 1,
+    first_name: 'John',
+    last_name: 'Smith',
+    email: 'smith@gmail.com',
+    role: 'user',
+  };
 
   beforeEach(() => {
     Container.reset();
@@ -65,6 +72,56 @@ describe('UserService', () => {
         databaseServiceMock.runQuery.mockResolvedValueOnce({ rowCount: 0, ...restQueryResult });
 
         await expect(userService.createUser(createUserDto)).rejects.toThrow(new HttpException('Cannot create user', 500));
+      });
+    });
+  });
+
+  describe('getUsers method', () => {
+    const userRow = { id: 1, firstName: 'John', lastName: 'Smith', email: 'smith@gmail.com', role: 'user' };
+
+    describe('when fetch some users', () => {
+      it('should return array of users', async () => {
+        databaseServiceMock.runQuery.mockResolvedValueOnce({ rowCount: 1, ...restQueryResult, rows: [rawUserRow] });
+
+        const result = await userService.getUsers();
+
+        expect(result).toEqual([userRow]);
+      });
+    });
+
+    describe('when not found', () => {
+      it('should return empty array', async () => {
+        databaseServiceMock.runQuery.mockResolvedValueOnce({ rowCount: 0, ...restQueryResult });
+
+        const result = await userService.getUsers();
+
+        expect(result).toEqual([]);
+      });
+    });
+
+    describe('when role is provided', () => {
+      it('should run findUsersByRole method', async () => {
+        const role = 'user';
+
+        databaseServiceMock.runQuery.mockResolvedValueOnce({ rowCount: 0, ...restQueryResult });
+
+        const findUserByRoleSpy = jest.spyOn(userRepository, 'getUsersByRole');
+
+        await userService.getUsers(role);
+
+        expect(findUserByRoleSpy).toHaveBeenCalledWith(role);
+      });
+    });
+
+    describe('when role is not provided', () => {
+      it('should run getAllUsers method', async () => {
+        databaseServiceMock.runQuery.mockResolvedValueOnce({ rowCount: 0, ...restQueryResult });
+
+        const getAllUsersSpy = jest.spyOn(userRepository, 'getAllUsers');
+
+        await userService.getUsers();
+
+        expect(getAllUsersSpy).toHaveBeenCalled();
       });
     });
   });
