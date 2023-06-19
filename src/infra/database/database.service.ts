@@ -10,7 +10,7 @@ class DatabaseService {
   }
 
   async runQuery(query: string, params?: unknown[]) {
-    return await this.pool.query(query, params);
+    return this.pool.query(query, params);
   }
 }
 
