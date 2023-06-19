@@ -29,4 +29,18 @@ async function getUsers(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export { createUser, getUsers };
+async function findUserById(req: Request, res: Response, next: NextFunction) {
+  const parsedId = parseInt(req.params.id);
+
+  try {
+    const userService = Container.get(UserService);
+
+    const user = await userService.findUserById(parsedId);
+
+    return res.status(200).json(user);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export { createUser, getUsers, findUserById };

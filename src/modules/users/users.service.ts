@@ -19,6 +19,10 @@ class UserService {
 
     return this.userRepository.getAllUsers();
   }
+
+  async findUserById(id: number): Promise<User> {
+    return this.userRepository.findUserById(id);
+  }
 }
 
 export default UserService;

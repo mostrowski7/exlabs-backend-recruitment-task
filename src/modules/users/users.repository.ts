@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { DatabaseError, QueryResult } from 'pg';
+import { DatabaseError } from 'pg';
 import { plainToInstance } from 'class-transformer';
 import DatabaseService from '../../infra/database/database.service';
 import CreateUserDto from '../../interfaces/dtos/create-user.dto';
@@ -75,6 +75,23 @@ class UserRepository {
     );
 
     return result.rows.map((row) => plainToInstance(User, convertQueryResultKeys(row)));
+  }
+
+  async findUserById(id: number): Promise<User> {
+    const result = await this.databaseService.runQuery(
+      `
+        SELECT id, first_name, last_name, email, role
+        FROM users
+        WHERE id = $1
+        `,
+      [id],
+    );
+
+    if (result.rowCount === 0) {
+      throw new HttpException('User not found', 404);
+    }
+
+    return plainToInstance(User, convertQueryResultKeys(result.rows[0]));
   }
 }
 
