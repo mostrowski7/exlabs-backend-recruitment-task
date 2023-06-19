@@ -7,7 +7,7 @@ import logger from '../../utils/logger';
 
 function errorHandler(error: Error, req: Request, res: Response, next: NextFunction) {
   if (config.nodeEnv === Environment.Development) {
-    logger.info('Error handler: ', error);
+    logger.debug('Error handler: ', error);
   }
 
   if (error instanceof HttpException) {
