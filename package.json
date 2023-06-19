@@ -7,9 +7,9 @@
     "dev": "nodemon src/app/server.ts",
     "build": "tsc",
     "start": "node dist/app/server.js",
-    "migration": "knex migrate:up --knexfile src/config/knex.config.ts",
-    "seed": "knex seed:run --knexfile src/config/knex.config.ts",
-    "test": "tsc & jest dist/tests"
+    "migration": "knex migrate:up --knexfile dist/config/knex.config.js",
+    "seed": "knex seed:run --knexfile dist/config/knex.config.js",
+    "test": "jest --verbose dist/tests"
   },
   "keywords": [],
   "author": "",
