@@ -4,14 +4,13 @@ import logger from '../../utils/logger';
 async function databaseConnection() {
   try {
     const pool = new Pool();
-
     await pool.connect();
 
-    await pool.query('SELECT NOW()');
-
-    logger.info('Database connected');
+    logger.info('Connected to database');
   } catch (error) {
-    logger.error('Cannot connect to database');
+    logger.error('Cannot connect to database', error);
+
+    process.exit(1);
   }
 }
 

@@ -10,8 +10,6 @@ import routes from '../interfaces/routes';
 
 const app = express();
 
-databaseConnection();
-
 app.use(express.json());
 
 app.use(cors());
@@ -22,9 +20,10 @@ app.use('/api', routes);
 
 app.use(errorHandler);
 
-app.listen(config.port, () => {
-  console.log('node env', process.env.NODE_ENV);
+app.listen(config.port, async () => {
   logger.info(`Server listening on port ${config.port}`);
+
+  await databaseConnection();
 });
 
-export const server = app;
+export default app;
