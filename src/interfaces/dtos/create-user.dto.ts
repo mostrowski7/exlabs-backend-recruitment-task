@@ -1,7 +1,6 @@
 import { IsEmail, IsIn, IsOptional, IsString } from 'class-validator';
 import { Role } from '../../modules/users/users.type';
-
-const roles = ['user', 'admin'];
+import { roles } from '../../modules/users/entities/user.entity';
 
 class CreateUserDto {
   @IsString()

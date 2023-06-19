@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { DatabaseError } from 'pg';
+import { DatabaseError, QueryResult } from 'pg';
 import { plainToInstance } from 'class-transformer';
 import DatabaseService from '../../infra/database/database.service';
 import CreateUserDto from '../../interfaces/dtos/create-user.dto';
@@ -7,6 +7,7 @@ import DatabaseErrorCode from '../../infra/database/database.error';
 import HttpException from '../../utils/http-exception';
 import User from './entities/user.entity';
 import { convertQueryResultKeys } from '../../utils/case-conversion';
+import { Role } from './users.type';
 
 @Service()
 class UserRepository {
@@ -49,6 +50,31 @@ class UserRepository {
     if (result.rowCount === 0) return null;
 
     return plainToInstance(User, convertQueryResultKeys(result.rows[0]));
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    const result = await this.databaseService.runQuery(
+      `
+        SELECT id, first_name, last_name, email, role
+        FROM users
+        `,
+      [],
+    );
+
+    return result.rows.map((row) => plainToInstance(User, convertQueryResultKeys(row)));
+  }
+
+  async getUsersByRole(role?: Role): Promise<User[]> {
+    const result = await this.databaseService.runQuery(
+      `
+        SELECT id, first_name, last_name, email, role
+        FROM users
+        WHERE role = $1
+        `,
+      [role],
+    );
+
+    return result.rows.map((row) => plainToInstance(User, convertQueryResultKeys(row)));
   }
 }
 

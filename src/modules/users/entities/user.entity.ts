@@ -1,5 +1,7 @@
 import { Role } from '../users.type';
 
+export const roles = ['user', 'admin'];
+
 class User {
   id: number;
   firstName: string;
