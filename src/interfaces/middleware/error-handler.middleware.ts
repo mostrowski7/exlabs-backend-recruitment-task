@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import HttpException from '../../utils/http-exception';
 import { ValidationError } from 'class-validator';
 
-async function errorHandler(error: Error, req: Request, res: Response, next: NextFunction) {
+function errorHandler(error: Error, req: Request, res: Response, next: NextFunction) {
   if (error instanceof HttpException) {
     return res.status(error.code).send(error.message);
   }

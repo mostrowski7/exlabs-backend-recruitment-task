@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { validateBody } from '../middleware/request-validator';
+import { validateBody } from '../middleware/request-validator.middleware';
 import { authenticateUser } from '../controllers/auth.controller';
 import AuthenticateUserDto from '../dtos/authenticate-user.dto';
 
