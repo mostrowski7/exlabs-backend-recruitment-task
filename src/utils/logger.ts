@@ -8,7 +8,7 @@ const logger = createLogger({
     timestamp({
       format: 'DD-MM-YYYY HH:mm:ss',
     }),
-    prettyPrint()
+    prettyPrint(),
   ),
   transports: [new transports.Console()],
 });
