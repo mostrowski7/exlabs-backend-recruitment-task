@@ -14,7 +14,7 @@ import { UpdateUserBodyDto } from '../../interfaces/dtos/update-user.dto';
 class UserRepository {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<void> {
+  async create(createUserDto: CreateUserDto): Promise<void> {
     const { firstName, lastName, email, role } = createUserDto;
 
     try {
@@ -53,7 +53,7 @@ class UserRepository {
     return plainToInstance(User, convertObjectKeys(result.rows[0]));
   }
 
-  async getAllUsers(): Promise<User[]> {
+  async getMany(): Promise<User[]> {
     const result = await this.databaseService.runQuery(
       `
         SELECT id, first_name, last_name, email, role
@@ -65,7 +65,7 @@ class UserRepository {
     return result.rows.map((row) => plainToInstance(User, convertObjectKeys(row)));
   }
 
-  async getUsersByRole(role?: Role): Promise<User[]> {
+  async getManyByRole(role?: Role): Promise<User[]> {
     const result = await this.databaseService.runQuery(
       `
         SELECT id, first_name, last_name, email, role
@@ -78,7 +78,7 @@ class UserRepository {
     return result.rows.map((row) => plainToInstance(User, convertObjectKeys(row)));
   }
 
-  async findUserById(id: number): Promise<User> {
+  async findById(id: number): Promise<User> {
     const result = await this.databaseService.runQuery(
       `
         SELECT id, first_name, last_name, email, role
@@ -95,7 +95,7 @@ class UserRepository {
     return plainToInstance(User, convertObjectKeys(result.rows[0]));
   }
 
-  async updateUserById(id: number, updateUserDto: UpdateUserBodyDto): Promise<void> {
+  async updateById(id: number, updateUserDto: UpdateUserBodyDto): Promise<void> {
     const convertedFieldsKeyCase = convertObjectKeys({ ...updateUserDto }, 'snake');
 
     const { params, columns } = transformObjectToQueryColumnsAndParams(convertedFieldsKeyCase);
@@ -107,6 +107,20 @@ class UserRepository {
         WHERE id = $1 
         `,
       [id, ...params],
+    );
+
+    if (result.rowCount === 0) {
+      throw new HttpException('User not found', 404);
+    }
+  }
+
+  async deleteById(id: number): Promise<void> {
+    const result = await this.databaseService.runQuery(
+      `
+        DELETE FROM users
+        WHERE id = $1 
+        `,
+      [id],
     );
 
     if (result.rowCount === 0) {
