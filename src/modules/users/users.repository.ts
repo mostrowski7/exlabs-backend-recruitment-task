@@ -6,8 +6,9 @@ import CreateUserDto from '../../interfaces/dtos/create-user.dto';
 import DatabaseErrorCode from '../../infra/database/database.error';
 import HttpException from '../../utils/http-exception';
 import User from './entities/user.entity';
-import { convertQueryResultKeys } from '../../utils/case-conversion';
+import { convertObjectKeys, transformObjectToQueryColumnsAndParams } from '../../utils/data-conversion';
 import { Role } from './users.type';
+import { UpdateUserBodyDto } from '../../interfaces/dtos/update-user.dto';
 
 @Service()
 class UserRepository {
@@ -49,7 +50,7 @@ class UserRepository {
 
     if (result.rowCount === 0) return null;
 
-    return plainToInstance(User, convertQueryResultKeys(result.rows[0]));
+    return plainToInstance(User, convertObjectKeys(result.rows[0]));
   }
 
   async getAllUsers(): Promise<User[]> {
@@ -61,7 +62,7 @@ class UserRepository {
       [],
     );
 
-    return result.rows.map((row) => plainToInstance(User, convertQueryResultKeys(row)));
+    return result.rows.map((row) => plainToInstance(User, convertObjectKeys(row)));
   }
 
   async getUsersByRole(role?: Role): Promise<User[]> {
@@ -74,7 +75,7 @@ class UserRepository {
       [role],
     );
 
-    return result.rows.map((row) => plainToInstance(User, convertQueryResultKeys(row)));
+    return result.rows.map((row) => plainToInstance(User, convertObjectKeys(row)));
   }
 
   async findUserById(id: number): Promise<User> {
@@ -91,7 +92,26 @@ class UserRepository {
       throw new HttpException('User not found', 404);
     }
 
-    return plainToInstance(User, convertQueryResultKeys(result.rows[0]));
+    return plainToInstance(User, convertObjectKeys(result.rows[0]));
+  }
+
+  async updateUserById(id: number, updateUserDto: UpdateUserBodyDto): Promise<void> {
+    const convertedFieldsKeyCase = convertObjectKeys({ ...updateUserDto }, 'snake');
+
+    const { params, columns } = transformObjectToQueryColumnsAndParams(convertedFieldsKeyCase);
+
+    const result = await this.databaseService.runQuery(
+      `
+        UPDATE users
+        SET ${columns}
+        WHERE id = $1 
+        `,
+      [id, ...params],
+    );
+
+    if (result.rowCount === 0) {
+      throw new HttpException('User not found', 404);
+    }
   }
 }
 
