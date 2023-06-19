@@ -4,6 +4,7 @@ import { validate } from './env.validation';
 dotenv.config();
 
 const config = {
+  nodeEnv: process.env.NODE_ENV ?? 'development',
   port: process.env.PORT ? parseInt(process.env.PORT) : 3000,
   pgHost: process.env.PGHOST,
   pgPort: process.env.PGPORT,
