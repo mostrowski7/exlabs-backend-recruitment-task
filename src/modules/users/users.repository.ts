@@ -6,7 +6,10 @@ import CreateUserDto from '../../interfaces/dtos/create-user.dto';
 import DatabaseErrorCode from '../../infra/database/database.error';
 import HttpException from '../../utils/http-exception';
 import User from './entities/user.entity';
-import { convertObjectKeys, transformObjectToQueryColumnsAndParams } from '../../utils/data-conversion';
+import {
+  convertObjectKeys,
+  transformObjectToQueryColumnsAndParams,
+} from '../../utils/data-conversion';
 import { Role } from './users.type';
 import { UpdateUserBodyDto } from '../../interfaces/dtos/update-user.dto';
 

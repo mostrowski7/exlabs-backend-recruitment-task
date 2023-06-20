@@ -14,7 +14,9 @@ class AuthService {
 
     if (!user) throw new HttpException('Unauthenticated', 401);
 
-    return jwt.sign({ id: user.id, email: user.email }, config.jwtSecret, { expiresIn: config.jwtExpirationTime });
+    return jwt.sign({ id: user.id, email: user.email }, config.jwtSecret, {
+      expiresIn: config.jwtExpirationTime,
+    });
   }
 }
 
