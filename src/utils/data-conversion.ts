@@ -17,7 +17,10 @@ function convertObjectKeys(obj: Record<string, unknown>, target: 'snake' | 'came
   return row;
 }
 
-function transformObjectToQueryColumnsAndParams(obj: Record<string, unknown>): { params: unknown[]; columns: string } {
+function transformObjectToQueryColumnsAndParams(obj: Record<string, unknown>): {
+  params: unknown[];
+  columns: string;
+} {
   const columns = Object.keys(obj)
     .map((key, index) => `${key} = $${index + 2}`)
     .join(', ');

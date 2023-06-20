@@ -53,7 +53,9 @@ describe('AuthService', () => {
           ...restQueryResult,
         });
 
-        expect(authService.authenticateUser(authenticateUserDto)).rejects.toThrow(new HttpException('Unauthenticated', 401));
+        expect(authService.authenticateUser(authenticateUserDto)).rejects.toThrow(
+          new HttpException('Unauthenticated', 401),
+        );
       });
     });
   });

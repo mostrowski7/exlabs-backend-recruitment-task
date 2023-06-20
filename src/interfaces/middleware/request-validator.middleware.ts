@@ -8,7 +8,10 @@ import logger from '../../utils/logger';
 
 function validateBody(dto: ClassConstructor<object>): RequestHandler {
   return async function (req: Request, _: Response, next: NextFunction) {
-    const errors = await validate(plainToInstance(dto, req.body), { whitelist: true, forbidNonWhitelisted: true });
+    const errors = await validate(plainToInstance(dto, req.body), {
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    });
 
     if (errors.length > 0) {
       if (config.nodeEnv === Environment.Development) {
@@ -24,7 +27,10 @@ function validateBody(dto: ClassConstructor<object>): RequestHandler {
 
 function validateQuery(dto: ClassConstructor<object>): RequestHandler {
   return async function (req: Request, _: Response, next: NextFunction) {
-    const errors = await validate(plainToInstance(dto, req.query), { whitelist: true, forbidNonWhitelisted: true });
+    const errors = await validate(plainToInstance(dto, req.query), {
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    });
 
     if (errors.length > 0) {
       if (config.nodeEnv === Environment.Development) {
@@ -40,7 +46,10 @@ function validateQuery(dto: ClassConstructor<object>): RequestHandler {
 
 function validateParam(dto: ClassConstructor<object>): RequestHandler {
   return async function (req: Request, _: Response, next: NextFunction) {
-    const errors = await validate(plainToInstance(dto, req.params), { whitelist: true, forbidNonWhitelisted: true });
+    const errors = await validate(plainToInstance(dto, req.params), {
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    });
 
     if (errors.length > 0) {
       if (config.nodeEnv === Environment.Development) {
