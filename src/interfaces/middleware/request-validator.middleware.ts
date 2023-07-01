@@ -6,16 +6,18 @@ import config from '../../config';
 import { Environment } from '../../config/env.validation';
 import logger from '../../utils/logger';
 
-function validateBody(dto: ClassConstructor<object>): RequestHandler {
+type RequestObjectType = 'body' | 'params' | 'query';
+
+function requestValidator(dto: ClassConstructor<object>, type: RequestObjectType): RequestHandler {
   return async function (req: Request, _: Response, next: NextFunction) {
-    const errors = await validate(plainToInstance(dto, req.body), {
+    const errors = await validate(plainToInstance(dto, req[type]), {
       whitelist: true,
       forbidNonWhitelisted: true,
     });
 
     if (errors.length > 0) {
       if (config.nodeEnv === Environment.Development) {
-        logger.debug('Request query validator: ', errors);
+        logger.debug(`Request ${type} validator: `, errors);
       }
 
       next(new HttpException('Invalid data', 400));
@@ -23,44 +25,18 @@ function validateBody(dto: ClassConstructor<object>): RequestHandler {
 
     next();
   };
+}
+
+function validateBody(dto: ClassConstructor<object>): RequestHandler {
+  return requestValidator(dto, 'body');
 }
 
 function validateQuery(dto: ClassConstructor<object>): RequestHandler {
-  return async function (req: Request, _: Response, next: NextFunction) {
-    const errors = await validate(plainToInstance(dto, req.query), {
-      whitelist: true,
-      forbidNonWhitelisted: true,
-    });
-
-    if (errors.length > 0) {
-      if (config.nodeEnv === Environment.Development) {
-        logger.debug('Request query validator: ', errors);
-      }
-
-      next(new HttpException('Invalid data', 400));
-    }
-
-    next();
-  };
+  return requestValidator(dto, 'query');
 }
 
 function validateParam(dto: ClassConstructor<object>): RequestHandler {
-  return async function (req: Request, _: Response, next: NextFunction) {
-    const errors = await validate(plainToInstance(dto, req.params), {
-      whitelist: true,
-      forbidNonWhitelisted: true,
-    });
-
-    if (errors.length > 0) {
-      if (config.nodeEnv === Environment.Development) {
-        logger.debug('Request param validator: ', errors);
-      }
-
-      next(new HttpException('Invalid data', 400));
-    }
-
-    next();
-  };
+  return requestValidator(dto, 'params');
 }
 
 export { validateBody, validateQuery, validateParam };
