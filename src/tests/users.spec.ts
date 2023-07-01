@@ -9,6 +9,7 @@ import UserRepository from '../modules/users/users.repository';
 import { UpdateUserBodyDto } from '../interfaces/dtos/update-user.dto';
 import { QueryResult } from 'pg';
 import User from '../modules/users/entities/user.entity';
+import CacheService from '../infra/cache/cache.service';
 
 jest.mock('../infra/database/database.service');
 
@@ -50,7 +51,7 @@ describe('UserService', () => {
     Container.reset();
     jest.resetAllMocks();
 
-    databaseServiceMock = new DatabaseService() as jest.Mocked<DatabaseService>;
+    databaseServiceMock = new DatabaseService(new CacheService()) as jest.Mocked<DatabaseService>;
 
     Container.set(DatabaseService, databaseServiceMock);
 
@@ -59,7 +60,7 @@ describe('UserService', () => {
   });
 
   describe('createUser method', () => {
-    it('should pass correct parameters to userRepository.createUser method', async () => {
+    it('should pass correct parameters to createUser method', async () => {
       databaseServiceMock.runQuery.mockResolvedValueOnce({ ...queryResult, rowCount: 1 });
 
       const createUserSpy = jest.spyOn(userRepository, 'create');
