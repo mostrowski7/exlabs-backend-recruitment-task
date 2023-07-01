@@ -2,11 +2,11 @@
   "name": "exlabs-backend-recruitment-task",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/app/server.js",
+  "main": "dist/app/main.js",
   "scripts": {
-    "dev": "nodemon src/app/server.ts",
+    "dev": "nodemon src/app/main.ts",
     "build": "tsc",
-    "start": "cross-env NODE_ENV=production node dist/app/server.js",
+    "start": "cross-env NODE_ENV=production node dist/app/main.js",
     "migration": "knex migrate:up --knexfile dist/config/knex.config.js",
     "seed": "knex seed:run --knexfile dist/config/knex.config.js",
     "test": "jest --verbose dist/tests"
