@@ -1,9 +1,9 @@
 import { Service } from 'typedi';
 import { DatabaseError } from 'pg';
 import { plainToInstance } from 'class-transformer';
-import DatabaseService from '../../infra/database/database.service';
+import DatabaseService from '../../infrastructure/database/database.service';
 import CreateUserDto from '../../interfaces/dtos/create-user.dto';
-import DatabaseErrorCode from '../../infra/database/database.error';
+import DatabaseErrorCode from '../../infrastructure/database/database.error';
 import HttpException from '../../utils/http-exception';
 import User from './entities/user.entity';
 import {

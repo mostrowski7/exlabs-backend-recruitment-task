@@ -1,15 +1,15 @@
 import 'reflect-metadata';
 import { Container } from 'typedi';
 import UserService from '../modules/users/users.service';
-import DatabaseService from '../infra/database/database.service';
+import DatabaseService from '../infrastructure/database/database.service';
 import CreateUserDto from '../interfaces/dtos/create-user.dto';
-import DatabaseErrorCode from '../infra/database/database.error';
+import DatabaseErrorCode from '../infrastructure/database/database.error';
 import HttpException from '../utils/http-exception';
 import UserRepository from '../modules/users/users.repository';
 import { UpdateUserBodyDto } from '../interfaces/dtos/update-user.dto';
 import { QueryResult } from 'pg';
 import User from '../modules/users/entities/user.entity';
-import CacheService from '../infra/cache/cache.service';
+import CacheService from '../infrastructure/cache/cache.service';
 
 jest.mock('../infra/database/database.service');
 

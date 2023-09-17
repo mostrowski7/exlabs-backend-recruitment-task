@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import { Container } from 'typedi';
-import DatabaseService from '../infra/database/database.service';
+import DatabaseService from '../infrastructure/database/database.service';
 import AuthService from '../modules/auth/auth.service';
 import AuthenticateUserDto from '../interfaces/dtos/authenticate-user.dto';
 import HttpException from '../utils/http-exception';
-import CacheService from '../infra/cache/cache.service';
+import CacheService from '../infrastructure/cache/cache.service';
 
 jest.mock('../infra/database/database.service');
 

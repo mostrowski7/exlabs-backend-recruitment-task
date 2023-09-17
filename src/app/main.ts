@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import config from '../config';
 import logger from '../utils/logger';
-import databaseConnection from '../infra/database/database-connection';
+import databaseConnection from '../infrastructure/database/database-connection';
 import createServer from './server';
 
 async function main() {
